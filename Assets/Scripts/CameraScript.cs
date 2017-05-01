@@ -2,22 +2,30 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Behaviour for the camera
+/// </summary>
 public class CameraScript : MonoBehaviour {
 
     #region Fields
-    // Public fields
+    /// <summary>
+    /// The speed at which the camera scrolls through the field
+    /// </summary>
     public float ScrollSpeed;
+    /// <summary>
+    /// How wide the area at the side of the screen should be before the camera moves
+    /// </summary>
     public int ScrollAreaSize;
-    public GameObject ResetState;
 
-    // Private fields
     private bool _allowScrollUp, _allowScrollDown, _allowScrollLeft, _allowScrollRight;
     private float _maxUp, _maxDown, _maxLeft, _maxRight;
     private Vector3 _initialPosition;
     #endregion
 
     #region Properties
-
+    /// <summary>
+    /// Is scrolling up allowed?
+    /// </summary>
     public bool AllowScrollUp {
         get { return _allowScrollUp; }
         set {
@@ -26,6 +34,9 @@ public class CameraScript : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Is scrolling down allowed?
+    /// </summary>
     public bool AllowScrollDown {
         get { return _allowScrollDown; }
         set {
@@ -34,6 +45,9 @@ public class CameraScript : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Is scrolling left allowed?
+    /// </summary>
     public bool AllowScrollLeft {
         get { return _allowScrollLeft; }
         set {
@@ -42,6 +56,9 @@ public class CameraScript : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Is scrolling right allowed?
+    /// </summary>
     public bool AllowScrollRight {
         get { return _allowScrollRight; }
         set {
@@ -50,6 +67,9 @@ public class CameraScript : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Highest possible value to scroll up to
+    /// </summary>
     public float MaxUpperView {
         get { return _maxUp; }
         set {
@@ -59,6 +79,9 @@ public class CameraScript : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Lowest possible value to scroll down to
+    /// </summary>
     public float MaxLowerView {
         get { return _maxDown; }
         set {
@@ -68,6 +91,9 @@ public class CameraScript : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Lowest possible value to scroll left to
+    /// </summary>
     public float MaxLeftView {
         get { return _maxLeft; }
         set {
@@ -77,6 +103,9 @@ public class CameraScript : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Highest possible value to scroll right to
+    /// </summary>
     public float MaxRightView {
         get { return _maxRight; }
         set {
@@ -88,7 +117,9 @@ public class CameraScript : MonoBehaviour {
     #endregion
 
     #region Methods
-    // Use this to set default values needed before handling the object
+    /// <summary>
+    /// Sets default values needed before handling the object before anything else
+    /// </summary>
     void Awake() {
         var cam = this.GetComponentInParent<Camera>();
         _initialPosition = cam.transform.position;
@@ -98,7 +129,9 @@ public class CameraScript : MonoBehaviour {
         MaxUpperView = cam.ViewportToWorldPoint(new Vector3(1, 1, cam.nearClipPlane)).y;
     }
 
-    // Use this for initialization
+    /// <summary>
+    /// Use this for initialization
+    /// </summary>
     void Start() {
         AllowScrollUp = true;
         AllowScrollDown = true;
@@ -106,13 +139,18 @@ public class CameraScript : MonoBehaviour {
         AllowScrollRight = true;
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Update is called once per frame. Primarily handles input.
+    /// </summary>
     void Update() {
+        // Get some values
         var mPos = Input.mousePosition;
         var cam = GetComponent<Camera>();
-        var bottomLeft = cam.ViewportToScreenPoint(new Vector3(0, 0, cam.nearClipPlane));
-        var topRight = cam.ViewportToScreenPoint(new Vector3(1, 1, cam.nearClipPlane));
+        var bottomLeft = cam.ViewportToScreenPoint(new Vector3(0, 0, cam.nearClipPlane)); //get bounds
+        var topRight = cam.ViewportToScreenPoint(new Vector3(1, 1, cam.nearClipPlane));   //^
         var speed = ScrollSpeed * Time.deltaTime;
+
+        // Check input
         if (bottomLeft.x < mPos.x && mPos.x < bottomLeft.x + ScrollAreaSize && _allowScrollLeft) {
             this.transform.Translate(-speed, 0f, 0f);
             AllowScrollRight = true;
@@ -132,6 +170,9 @@ public class CameraScript : MonoBehaviour {
         FitViewToBoundaries();
     }
 
+    /// <summary>
+    /// Moves the camera to its initial position
+    /// </summary>
     public void Reset() {
         this.GetComponent<Camera>().transform.position = _initialPosition;
         //UnityEditor.PrefabUtility.ResetToPrefabState(this.gameObject);
@@ -140,14 +181,21 @@ public class CameraScript : MonoBehaviour {
     #endregion
 
     #region Helper Methods
-
+    /// <summary>
+    /// Less copy-pastas
+    /// </summary>
     private void AllowAllScrollingDirections() {
         _allowScrollDown = true;
         _allowScrollLeft = true;
         _allowScrollRight = true;
         _allowScrollUp = true;
     }
+
+    /// <summary>
+    /// Makes sure the view does not go out of bounds
+    /// </summary>
     private void FitViewToBoundaries() {
+        // Get some needed values
         var camera = GetComponent<Camera>();
         var bottomLeft = camera.ViewportToWorldPoint(new Vector3(0, 0, camera.nearClipPlane));
         var topRight = camera.ViewportToWorldPoint(new Vector3(1, 1, camera.nearClipPlane));

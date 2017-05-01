@@ -6,42 +6,34 @@ using UnityEngine.UI;
 public class OptionsFormScript : MonoBehaviour {
 
     #region Properties
-
+    /// <summary>
+    /// Gets the value of the 'Mines' field
+    /// </summary>
     public int Mines {
         get { return int.Parse(Get("Text", "Mines").text); }
     }
 
-    public string MinesPlaceholder {
-        set { Get("Placeholder", "Mines").text = value; }
-    }
-
+    /// <summary>
+    /// Gets the value of the 'Width' field
+    /// </summary>
     public int FieldWidth {
         get { return int.Parse(Get("Text", "FieldWidth").text); }
     }
 
-    public string FieldWidthPlaceholder {
-        set { Get("Placeholder", "FieldWidth").text = value; }
-    }
-
+    /// <summary>
+    /// Gets the value of the 'Height' field
+    /// </summary>
     public int FieldHeight {
         get { return int.Parse(Get("Text", "FieldHeight").text); }
     }
-
-    public string FieldHeightPlaceholder {
-        set { Get("Placeholder", "FieldHeight").text = value; }
-    }
     #endregion
 
-    // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
+    /// <summary>
+    /// Gets the field with name <paramref name="name"/> and parent <paramref name="parentName"/>
+    /// </summary>
+    /// <param name="name">Name of the <see cref="Text"/> object</param>
+    /// <param name="parentName">Name of the parent of the object</param>
+    /// <returns></returns>
     private Text Get(string name, string parentName) {
         var texts =
             this.GetComponentsInChildren<Text>()
@@ -53,9 +45,5 @@ public class OptionsFormScript : MonoBehaviour {
         if (!texts.Any())
             throw new MissingComponentException("No" + temp);
         throw new MissingComponentException("Multiple" + temp);
-    }
-
-    private string GetParentName(GameObject obj) {
-        return obj.transform.parent.transform.parent.name;
     }
 }

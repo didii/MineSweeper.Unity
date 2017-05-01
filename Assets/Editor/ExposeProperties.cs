@@ -5,7 +5,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
-
+/// <summary>
+/// Exposes a property in the inspector
+/// </summary>
 public static class ExposeProperties {
     public static void Expose(PropertyField[] properties) {
 
@@ -66,7 +68,7 @@ public static class ExposeProperties {
 
     }
 
-    public static PropertyField[] GetProperties(System.Object obj) {
+    public static PropertyField[] GetProperties(object obj) {
 
         List<PropertyField> fields = new List<PropertyField>();
 
@@ -108,7 +110,7 @@ public static class ExposeProperties {
 
 
 public class PropertyField {
-    System.Object m_Instance;
+    object m_Instance;
     PropertyInfo m_Info;
     SerializedPropertyType m_Type;
 
@@ -127,7 +129,7 @@ public class PropertyField {
         }
     }
 
-    public PropertyField(System.Object instance, PropertyInfo info, SerializedPropertyType type) {
+    public PropertyField(object instance, PropertyInfo info, SerializedPropertyType type) {
 
         m_Instance = instance;
         m_Info = info;
@@ -137,12 +139,12 @@ public class PropertyField {
         m_Setter = m_Info.GetSetMethod();
     }
 
-    public System.Object GetValue() {
+    public object GetValue() {
         return m_Getter.Invoke(m_Instance, null);
     }
 
-    public void SetValue(System.Object value) {
-        m_Setter.Invoke(m_Instance, new System.Object[] { value });
+    public void SetValue(object value) {
+        m_Setter.Invoke(m_Instance, new[] { value });
     }
 
     public Type GetPropertyType() {
@@ -192,8 +194,6 @@ public class PropertyField {
         // COMMENT OUT to NOT expose custom objects/types
         propertyType = SerializedPropertyType.ObjectReference;
         return true;
-
-        //return false;
 
     }
 

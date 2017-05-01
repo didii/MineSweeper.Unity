@@ -4,6 +4,9 @@ using UnityEngine;
 using System.Collections;
 using UnityEditor;
 
+/// <summary>
+/// No worries about this one
+/// </summary>
 public class TestScript : MonoBehaviour {
 
     public void DoSomething() {
